@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FocusEvent } from 'react';
+import React, { useState, ChangeEvent, FocusEvent, useEffect } from 'react';
 import './App.css'
 import {
   boxStyle, calcNewPercent,
@@ -8,16 +8,19 @@ import { ActiveFond, IFond } from './types';
 import Fond from './components/Fond/Fond';
 
 
-const initialState:IFond[] | [] = [{id: 1, value: 100, percent: 20, ticket: 'FXRL', color: '#2a19bb'}]
+const initialState:IFond[] | [] = [
+  {id: 1, value: 100, percent: 20, ticket: 'FXRL', color: '#2a19bb'},
+  {id: 2, value: 200, percent: 56, ticket: 'FXUS', color: '#19bb52'}
+]
 
 const initialStateForFiledFocus: string | null = initialState[0]?.ticket || null
 
 function App() {
   const [idFieldFocus, setIdFieldFocus] = useState<string | null>(initialStateForFiledFocus)
-  const [fonds, setFonds] = useState<IFond[] | []>(initialState)
+  const [fonds, __] = useState<IFond[] | []>(initialState)
   const [err, setErr] = useState<string | null>(null)
 
-  const [activeFond, setActiveFond] = useInit(fonds)
+  const [activeFond, _, setActiveFond, setPassiveFonds, allFonds] = useInit(fonds)
 
   function onChangeValueHandler(e: ChangeEvent<HTMLInputElement>): void {
     const {id: inputId} = e.target.dataset
@@ -68,21 +71,39 @@ function App() {
     setIdFieldFocus(inputId as string)
   }
 
+  useEffect(() => {
+    setActiveFond((prev) => {
+      return fonds.find((fond) => fond.ticket === idFieldFocus) || prev
+    })
+    setPassiveFonds(() => {
+      return allFonds?.filter((fond) => {
+        if(fond && fond.ticket !== idFieldFocus) {
+          return fond
+        }
+      })
+    })
+  }, [idFieldFocus])
+
+
   return (
     <div className="app">
       <div className="app-row" onFocus={onFocusWrapperHandler}>
         <div className="app-wrapper">
           {err ?? <p>{err}</p>}
           <br/>
-          {JSON.stringify([activeFond])}
-          <br/>
-          <br/>
+          {JSON.stringify(allFonds)}
 
-          {activeFond?.id ? <Fond
-            fond={activeFond}
-            onChangeColorHandler={onChangeColorHandler}
-            onChangeValueHandler={onChangeValueHandler}
-          /> : <p>not found fonds</p>}
+          <br/>
+          <br/>
+          <br/>
+          {allFonds.map((fond) => {
+            return <Fond
+              key={fond.id}
+              fond={fond}
+              onChangeColorHandler={onChangeColorHandler}
+              onChangeValueHandler={onChangeValueHandler}
+            />
+          })}
         </div>
       </div>
 

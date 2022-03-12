@@ -4,8 +4,8 @@ import React, { ChangeEvent, VFC } from 'react';
 
 interface IProps {
   fond: IFond | ActiveFond;
-  onChangeValueHandler: (e: ChangeEvent<HTMLInputElement>) => void
-  onChangeColorHandler: (e: ChangeEvent<HTMLInputElement>) => void
+  onChangeValueHandler?: (e: ChangeEvent<HTMLInputElement>) => void
+  onChangeColorHandler?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 const Fond:VFC<IProps> = (props) => {

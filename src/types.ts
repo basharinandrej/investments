@@ -6,11 +6,16 @@ export interface IFond {
   percent: number,
   ticket: TicketType | string,
   color: string
+  isActiveFond?: boolean
 }
 
 export type ActiveFond = IFond | null
+export type AllFonds = IFond[] | []
 
 export type ReturnInit = [
   activeFond: IFond | null,
-  setActiveFond: (value: (prev: IFond | null) => IFond | null) => void
+  passiveFonds: IFond[] | null,
+  setActiveFond: (value: (prev: IFond | null) => IFond | null) => void,
+  setPassiveFonds: (value: (prev: IFond[] | null) => IFond[] | null) => void,
+  allFonds: AllFonds
 ]

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ActiveFond, IFond, ReturnInit } from '../types';
+import { useEffect, useState } from 'react';
+import { ActiveFond, AllFonds, IFond, ReturnInit } from '../types';
 
 export const LIMIT_HEIGHT = 500
 export const ONE_PERCENT = 5 // 1% = 5
@@ -30,6 +30,56 @@ export function calcNewPercent(value: number): number {
 }
 
 export function useInit(fonds: IFond[]): ReturnInit {
-  const [activeFond, setActiveFond] = useState<ActiveFond|null>(fonds[0] || null)
-  return [activeFond, setActiveFond]
+  const initialActiveFond: ActiveFond = { ...fonds[0], isActiveFond: true }
+  const [activeFond, setActiveFond] = useState<ActiveFond|null>( initialActiveFond|| null)
+
+
+  const passiveFondsLocal = fonds
+    .filter((_, idx) => idx > 0)
+    .map((fond) => {
+      return {...fond, isActiveFond:false}
+    })
+  const [passiveFonds, setPassiveFonds] = useState<IFond[]|null>(passiveFondsLocal || null)
+
+
+  const [allFonds, setAllFonds] = useState(setInitAllFonds())
+
+  function setInitAllFonds(): AllFonds {
+    if(activeFond?.id && (Array.isArray(passiveFonds) && passiveFonds.length > 0)) {
+      return passiveFonds.concat([activeFond])
+    }
+    return []
+  }
+
+  useEffect(() => {
+    setAllFonds((prevAllFonds) => {
+
+      if(prevAllFonds.length > 0) {
+        return prevAllFonds
+          .map((fond) => {
+            return {
+              ...fond,
+              isActiveFond: false
+            }
+          })
+          .map((fond) => {
+            if(fond.ticket === activeFond?.ticket) {
+              return {
+                ...fond,
+                color:activeFond.color,
+                percent:activeFond.percent,
+                value:activeFond.value,
+                isActiveFond: true
+              }
+            } else {
+              return fond
+            }
+          })
+      }
+      return []
+    })
+  }, [activeFond])
+
+
+  return [activeFond, passiveFonds, setActiveFond, setPassiveFonds, allFonds]
 }
