@@ -5,7 +5,8 @@ import {
   countriesLogo,
   getBoxElementStyle, LIMIT_HEIGHT, useInit
 } from './helper/helper';
-import { ActiveFond, IFondType, TicketType } from './types';
+import { ActiveFond, IFondType } from './types';
+import Fond from './components/Fond/Fond';
 
 
 const initialState:IFondType[] | [] = [{id: 1, value: 100, percent: 20, ticket: 'FXRL', color: '#2a19bb'}]
@@ -77,29 +78,13 @@ function App() {
           <br/>
           {JSON.stringify([activeFond])}
           <br/>
+          <br/>
 
-          {activeFond?.id ? <div key={activeFond.id}>
-            <label>{activeFond.ticket} - {countriesLogo[activeFond.ticket as TicketType]} </label>
-            <input
-              type="text"
-              data-id={activeFond.ticket}
-              value={activeFond.value}
-              onChange={onChangeValueHandler}
-            />
-            <br/>
-            <label>Цвет</label>
-            <input
-              type="color"
-              data-id={activeFond.ticket}
-              value={activeFond.color}
-              onChange={onChangeColorHandler}
-            />
-            <br/>
-            <strong>{activeFond.percent}&nbsp;%</strong>
-            <br/>
-            <br/>
-            <br/>
-          </div> : <p>not found fonds</p>}
+          {activeFond?.id ? <Fond
+            fond={activeFond}
+            onChangeColorHandler={onChangeColorHandler}
+            onChangeValueHandler={onChangeValueHandler}
+          /> : <p>not found fonds</p>}
         </div>
       </div>
 
