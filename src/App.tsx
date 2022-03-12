@@ -2,7 +2,6 @@ import React, { useState, ChangeEvent, FocusEvent } from 'react';
 import './App.css'
 import {
   boxStyle, calcNewPercent,
-  countriesLogo,
   getBoxElementStyle, LIMIT_HEIGHT, useInit
 } from './helper/helper';
 import { ActiveFond, IFond } from './types';
@@ -50,19 +49,18 @@ function App() {
   }
 
   function onChangeColorHandler(e: ChangeEvent<HTMLInputElement>): void {
-    const {id: inputId} = e.target.dataset
     const color = e.target.value
-    setFonds((prev) => {
-      return prev.map((fond) => {
-        if(fond.ticket === inputId) {
-          return {
-            ...fond, color
-          }
-        } else {
-          return fond
+
+    setActiveFond((activeFond: ActiveFond) => {
+      if(activeFond) {
+        return {
+          ...activeFond, color
         }
-      })
+      } else {
+        return null
+      }
     })
+
   }
 
   function onFocusWrapperHandler(e: FocusEvent<HTMLDivElement>): void {
@@ -80,7 +78,7 @@ function App() {
           <br/>
           <br/>
 
-          {!activeFond?.id ? <Fond
+          {activeFond?.id ? <Fond
             fond={activeFond}
             onChangeColorHandler={onChangeColorHandler}
             onChangeValueHandler={onChangeValueHandler}
@@ -90,11 +88,7 @@ function App() {
 
 
       <div className={'box'} style={boxStyle}>
-        {fonds.map((fond, idx) => {
-          return (
-            <div key={idx} style={getBoxElementStyle(fond.color, fond.value)}/>
-          )
-        })}
+        {activeFond && <div  style={getBoxElementStyle(activeFond.color, activeFond.value)}/>}
       </div>
     </div>
   );
