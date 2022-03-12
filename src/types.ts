@@ -1,6 +1,6 @@
 export type TicketType = 'FXRL' | 'FXUS'
 
-export interface IFondType {
+export interface IFond {
   id: string | number,
   value: number,
   percent: number,
@@ -8,9 +8,9 @@ export interface IFondType {
   color: string
 }
 
-export type ActiveFond = IFondType | null
+export type ActiveFond = IFond | null
 
 export type ReturnInit = [
-  activeFond: IFondType | null,
-  setActiveFond: (value: (prev: IFondType | null) => IFondType | null) => void
+  activeFond: IFond | null,
+  setActiveFond: (value: (prev: IFond | null) => IFond | null) => void
 ]

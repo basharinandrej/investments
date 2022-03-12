@@ -5,17 +5,17 @@ import {
   countriesLogo,
   getBoxElementStyle, LIMIT_HEIGHT, useInit
 } from './helper/helper';
-import { ActiveFond, IFondType } from './types';
+import { ActiveFond, IFond } from './types';
 import Fond from './components/Fond/Fond';
 
 
-const initialState:IFondType[] | [] = [{id: 1, value: 100, percent: 20, ticket: 'FXRL', color: '#2a19bb'}]
+const initialState:IFond[] | [] = [{id: 1, value: 100, percent: 20, ticket: 'FXRL', color: '#2a19bb'}]
 
 const initialStateForFiledFocus: string | null = initialState[0]?.ticket || null
 
 function App() {
   const [idFieldFocus, setIdFieldFocus] = useState<string | null>(initialStateForFiledFocus)
-  const [fonds, setFonds] = useState<IFondType[] | []>(initialState)
+  const [fonds, setFonds] = useState<IFond[] | []>(initialState)
   const [err, setErr] = useState<string | null>(null)
 
   const [activeFond, setActiveFond] = useInit(fonds)
@@ -80,7 +80,7 @@ function App() {
           <br/>
           <br/>
 
-          {activeFond?.id ? <Fond
+          {!activeFond?.id ? <Fond
             fond={activeFond}
             onChangeColorHandler={onChangeColorHandler}
             onChangeValueHandler={onChangeValueHandler}

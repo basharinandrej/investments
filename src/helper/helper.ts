@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ActiveFond, IFondType, ReturnInit } from '../types';
+import { ActiveFond, IFond, ReturnInit } from '../types';
 
 export const LIMIT_HEIGHT = 500
 export const ONE_PERCENT = 5 // 1% = 5
@@ -29,7 +29,7 @@ export function calcNewPercent(value: number): number {
   return value/ONE_PERCENT
 }
 
-export function useInit(fonds: IFondType[]): ReturnInit {
+export function useInit(fonds: IFond[]): ReturnInit {
   const [activeFond, setActiveFond] = useState<ActiveFond|null>(fonds[0] || null)
   return [activeFond, setActiveFond]
 }
